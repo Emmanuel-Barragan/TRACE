@@ -1,15 +1,13 @@
 # This module handles 4QUAD element generation
-
 import numpy as np 
 import scipy.special
 
-def stiffness_matrix_quad4(nat_coords, thickness, density, E_modulus):
+def stiffness_matrix_quad4(nat_coords, thickness, E_matrix):
     """ Generates the element stiffness matrix for a 4 node bilinear quad.
 
     Input: nat_coords (list format)
            thickness (float)
-           density (float)
-           E_modulus, plains stress elastic modulii (3x3 matrix)
+           E_matrix, plains stress elastic modulii (3x3 matrix)
     Output: Ke
     """
 
@@ -35,7 +33,7 @@ def stiffness_matrix_quad4(nat_coords, thickness, density, E_modulus):
             B[1, 1::2] = dN_dy
             B[2, ::2]  = dN_dy; B[2, 1::2] = dN_dx
             
-            Ke += (B.T @ E_modulus @ B ) * thickness * weight_product * detJ 
+            Ke += (B.T @ E_matrix @ B ) * thickness * weight_product * detJ 
 
     return Ke
         
