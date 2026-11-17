@@ -9,7 +9,7 @@ def solver(K_global, f_vector, prescribed_DoF):
            f_vector (ndarray)
            prescribed_DoF (list of DoF, 0-based)
 
-    Output: u displacement vector 
+    Output: u_vector, displacement vector 
     """
 
     K_modified = modified_stiffness_matrix(K_global, prescribed_DoF)

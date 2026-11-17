@@ -16,6 +16,7 @@ def stiffness_matrix_quad4(nat_coords, thickness, E_matrix):
     gauss_rule = 2 # a Gaussian quadrature rule of 2 is used. Given mesh generation makes rectangles only, this is an exact result.
 
     gauss_points, weights = scipy.special.roots_legendre(gauss_rule)
+
     for i in range(gauss_rule):
         for j in range(gauss_rule):
 
@@ -26,12 +27,7 @@ def stiffness_matrix_quad4(nat_coords, thickness, E_matrix):
 
             N, dN_dx, dN_dy, detJ = isoparametric_calc_quad4(nat_coords, [xi,eta])
 
-            B = np.zeros((3, 8))
-            
-            # ::2 means every other element.
-            B[0, ::2]  = dN_dx  
-            B[1, 1::2] = dN_dy
-            B[2, ::2]  = dN_dy; B[2, 1::2] = dN_dx
+            B = kinematic_relation(dN_dx, dN_dy)
             
             Ke += (B.T @ E_matrix @ B ) * thickness * weight_product * detJ 
 
@@ -74,4 +70,23 @@ def isoparametric_calc_quad4(nat_coords, iso_coords):
 
     return N, dN_dx, dN_dy, detJ
 
+def kinematic_relation(dN_dx, dN_dy):
+    """ Generates the displacement-strain kinematic matrix B """
+    B = np.zeros((3, 8))
 
+    # ::2 means every other element.
+    B[0, ::2]  = dN_dx  
+    B[1, 1::2] = dN_dy
+    B[2, ::2]  = dN_dy; B[2, 1::2] = dN_dx
+    
+    return B
+
+def E_matrix_generation(E_modulus, nu):
+
+    E_matrix = E_modulus / (1 - nu ** 2) * np.array([
+        [1,  nu, 0],
+        [nu, 1,  0],
+        [0,  0,  (1 - nu) / 2],
+    ])
+
+    return E_matrix
