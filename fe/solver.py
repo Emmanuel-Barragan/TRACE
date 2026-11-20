@@ -2,7 +2,7 @@
 import numpy as np 
 from fe.boundary import modified_stiffness_matrix, modified_force_vector
 
-def solver(K_global, f_vector, prescribed_DoF):
+def solver(K_global, f_vector, prescribed_DoF, prescribed_DoF_values):
     """ Applies BC and solves for displacement
 
     Input: K_global (ndarray)
@@ -13,7 +13,7 @@ def solver(K_global, f_vector, prescribed_DoF):
     """
 
     K_modified = modified_stiffness_matrix(K_global, prescribed_DoF)
-    f_modified = modified_force_vector(f_vector, prescribed_DoF)
+    f_modified = modified_force_vector(f_vector, K_global, prescribed_DoF, prescribed_DoF_values)
     
     u_vector = np.linalg.solve(K_modified, f_modified)
 
