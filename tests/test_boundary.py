@@ -32,12 +32,12 @@ def test_free_block_unchanged():
     np.testing.assert_allclose(Km[np.ix_(FREE, FREE)], K[np.ix_(FREE, FREE)])
 
 def test_force_vector_modified():
-    fm = modified_force_vector(F, PRESCRIBED)
+    fm = modified_force_vector(F, K, PRESCRIBED, [0,0])
     np.testing.assert_allclose(fm[PRESCRIBED], 0.0, atol=1e-12)   # prescribed zeroed
     np.testing.assert_allclose(fm[FREE], F[FREE])                 # free untouched
 
 def test_solution_matches_partition():
     u_mod = np.linalg.solve(modified_stiffness_matrix(K, PRESCRIBED),
-                            modified_force_vector(F, PRESCRIBED))
+                            modified_force_vector(F, K, PRESCRIBED, [0,0]))
     np.testing.assert_allclose(u_mod, partition_solve(K, F, FREE))
     np.testing.assert_allclose(u_mod[PRESCRIBED], 0.0, atol=1e-12)

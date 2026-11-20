@@ -13,12 +13,12 @@ PRESCRIBED = [0, 3]
 FREE = [1, 2]
 
 def test_matches_partition():
-    u_mod = solver(K, F, PRESCRIBED)
+    u_mod = solver(K, F, PRESCRIBED, [0, 0])
     np.testing.assert_allclose(u_mod, partition_solve(K, F, FREE))
     np.testing.assert_allclose(u_mod[PRESCRIBED], 0.0, atol=1e-12)
 
 def test_prescribed_dofs_are_zero_in_displacements():
-    u = solver(K,F, PRESCRIBED)
+    u = solver(K,F, PRESCRIBED, [0,0])
     np.testing.assert_allclose(u[PRESCRIBED], 0.0, atol=1e-12)
 
 
